@@ -215,7 +215,7 @@ function generateWeather(date: string, climate: string): DayWeather {
   };
 }
 
-function getSeasonalConditions(climate: string, month: number) WeatherCondition[] {
+function getSeasonalConditions(climate: string, month: number): WeatherCondition[]{
   const summer = month >= 5 && month <= 8;
   const winter = month === 11 || month <= 1;
 
