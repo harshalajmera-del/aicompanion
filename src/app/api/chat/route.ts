@@ -8,6 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { buildSystemPrompt } from '@/engines/conversation/prompt-builder';
 import { detectIntent } from '@/engines/conversation/intent-detector';
+import type { ExtractedEntities } from '@/engines/conversation/intent-detector';
 import { transition } from '@/engines/conversation/state-machine';
 import { generateItinerary } from '@/engines/itinerary/generator';
 import type { ConversationStage, TripContext } from '@/types/conversation';
@@ -251,7 +252,9 @@ function buildMockResponse(ctx: {
 }
 
 // ── Entity merger ──────────────────────────────────────────────────────────────
-function mergeExtracted(trip: TripMemory, extracted: Record<string, unknown>): TripMemory {
+function mergeExtracted(
+  trip: TripMemory,
+  extracted: ExtractedEntities): TripMemory {
   const updated = { ...trip };
   if (extracted.destination) updated.destination = extracted.destination as string;
   if (extracted.originCity) updated.originCity = extracted.originCity as string;
