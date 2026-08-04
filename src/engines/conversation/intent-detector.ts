@@ -183,10 +183,7 @@ export function detectIntent(
   if (travelers.children) entities.children = travelers.children;
   if (travelers.travelerType) entities.travelerType = travelers.travelerType;
 
-  const destination = extractDestination(text);
-if (destination) {
-  entities.destination = destination;
-}
+
   // ── Detect primary intent by stage context + patterns ──────────────────────
 
   // Greeting
