@@ -12,6 +12,7 @@ import type {
   MealRecommendation,
   TransportNote,
   DayWeather,
+  WeatherCondition,
   ItineraryMeta,
   BudgetBreakdown,
   TravelerCount,
