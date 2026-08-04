@@ -163,6 +163,13 @@ export function detectIntent(
   const lower = text.toLowerCase().trim();
   const entities: ExtractedEntities = {};
 
+  // Extract destination
+  const destination = extractDestination(text);
+
+  if (destination) {
+    entities.destination = destination;
+  }
+
   // Extract entities regardless of intent
   const duration = extractDuration(text);
   if (duration) entities.durationDays = duration;
@@ -176,6 +183,10 @@ export function detectIntent(
   if (travelers.children) entities.children = travelers.children;
   if (travelers.travelerType) entities.travelerType = travelers.travelerType;
 
+  const destination = extractDestination(text);
+if (destination) {
+  entities.destination = destination;
+}
   // ── Detect primary intent by stage context + patterns ──────────────────────
 
   // Greeting
@@ -265,4 +276,38 @@ export function detectIntent(
   }
 
   return { intent: 'ask_question', confidence: 0.5, extracted: entities };
+
+}
+const DESTINATIONS = [
+  "goa",
+  "bali",
+  "dubai",
+  "singapore",
+  "paris",
+  "tokyo",
+  "london",
+  "maldives",
+  "kerala",
+  "manali",
+  "jaipur",
+  "mumbai",
+  "delhi",
+  "bangalore",
+  "new york",
+  "switzerland",
+];
+
+function extractDestination(text: string): string | undefined {
+  const lower = text.toLowerCase();
+
+  const found = DESTINATIONS.find(city =>
+    lower.includes(city)
+  );
+
+  if (!found) return undefined;
+
+  return found
+    .split(" ")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }

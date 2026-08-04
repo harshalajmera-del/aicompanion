@@ -180,7 +180,11 @@ function buildMockResponse(ctx: {
     return { text: ARIA_GREETING };
   }
 
-  if (intent === 'discover_destination' && !trip.destination) {
+ if (
+  intent === 'discover_destination' &&
+  !trip.destination &&
+  !ctx.transitionResult.missingFields.some(f => f.field === 'destination')
+) {
     return {
       text: `That sounds like an amazing trip! 😊 I love helping with travel plans.\n\nTo point you in the right direction — are you thinking of a specific country or region, or would you like me to suggest some destinations based on what you enjoy?`,
       quickReplies: [
