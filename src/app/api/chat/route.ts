@@ -179,7 +179,15 @@ function buildMockResponse(ctx: {
   if (stage === 'greeting' || intent === 'greet') {
     return { text: ARIA_GREETING };
   }
-
+// If we're collecting trip details, always ask the next missing question
+if (
+  transitionResult.nextStage === "collecting_details" &&
+  transitionResult.missingFields.length > 0
+) {
+  return {
+    text: transitionResult.missingFields[0].question,
+  };
+}
  if (
   intent === 'discover_destination' &&
   !trip.destination &&
@@ -196,11 +204,15 @@ function buildMockResponse(ctx: {
     };
   }
 
-  if (trip.destination && transitionResult.nextStage === 'narrow_destination') {
-    return {
-      text: `${dest} is a wonderful choice — lots to explore! 🌟\n\nAre you thinking of any particular area? For example, if it's France you might prefer Paris for the culture, Nice for the Mediterranean vibe, or the Loire Valley for something off the beaten path.\n\nOr if you're set on ${dest} specifically, just say the word and I'll start planning!`,
-    };
-  }
+  if (transitionResult.nextStage === 'narrow_destination') {
+  return {
+    text: `${dest} is a wonderful choice! 🌍
+
+Let's start planning your trip.
+
+${transitionResult.missingFields[0]?.question ?? "Where will you be flying from?"}`,
+  };
+}
 
   if (transitionResult.missingFields.length > 0) {
     const nextQ = transitionResult.missingFields[0];

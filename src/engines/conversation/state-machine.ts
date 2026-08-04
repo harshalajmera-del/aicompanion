@@ -127,16 +127,25 @@ export function transition(input: TransitionInput): TransitionResult {
     }
 
     case 'request_itinerary': {
-      const missingForItinerary = getMissingFields(trip);
-      if (missingForItinerary.length === 0) {
-        result.nextStage = 'generating_itinerary';
-        result.shouldGenerateItinerary = true;
-      } else {
-        result.nextStage = 'collecting_details';
-        result.missingFields = missingForItinerary;
-      }
-      break;
-    }
+
+  const missing = getMissingFields(trip);
+
+  if (missing.length > 0) {
+
+    result.nextStage = 'collecting_details';
+
+    result.missingFields = missing;
+
+  } else {
+
+    result.nextStage = 'generating_itinerary';
+
+    result.shouldGenerateItinerary = true;
+
+  }
+
+  break;
+}
 
     case 'modify_itinerary':
       result.nextStage = 'refine_itinerary';

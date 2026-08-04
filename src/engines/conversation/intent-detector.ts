@@ -257,20 +257,12 @@ export function detectIntent(
     case 'narrow_destination':
       return { intent: 'narrow_destination', confidence: 0.75, extracted: entities };
 
-case 'collecting_details':
+case 'collecting_details': {
 
-  if (entities.budget) {
+  if (entities.originCity) {
     return {
-      intent: 'provide_budget',
-      confidence: 0.8,
-      extracted: entities,
-    };
-  }
-
-  if (entities.adults || entities.children) {
-    return {
-      intent: 'provide_travelers',
-      confidence: 0.8,
+      intent: 'provide_dates',
+      confidence: 0.9,
       extracted: entities,
     };
   }
@@ -278,17 +270,34 @@ case 'collecting_details':
   if (entities.durationDays) {
     return {
       intent: 'provide_dates',
-      confidence: 0.8,
+      confidence: 0.9,
+      extracted: entities,
+    };
+  }
+
+  if (entities.adults || entities.children) {
+    return {
+      intent: 'provide_travelers',
+      confidence: 0.9,
+      extracted: entities,
+    };
+  }
+
+  if (entities.budget) {
+    return {
+      intent: 'provide_budget',
+      confidence: 0.9,
       extracted: entities,
     };
   }
 
   return {
     intent: 'request_itinerary',
-    confidence: 0.7,
+    confidence: 0.8,
     extracted: entities,
   };
-
+}
+}
     case 'refine_itinerary':
     case 'approve_itinerary':
       if (APPROVE_PATTERNS.some(p => p.test(lower))) {
