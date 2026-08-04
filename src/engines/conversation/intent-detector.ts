@@ -183,7 +183,7 @@ export function detectIntent(
   if (travelers.children) entities.children = travelers.children;
   if (travelers.travelerType) entities.travelerType = travelers.travelerType;
 
-  // ── Detect primary intent by stage context + patterns ──────────────────────
+// ── Detect primary intent by stage context + patterns ──────────────────────
 
   // Greeting
   if (GREETING_PATTERNS.some(p => p.test(lower))) {
@@ -234,6 +234,17 @@ export function detectIntent(
     return { intent: 'provide_travelers', confidence: 0.82, extracted: entities };
   }
 
+  // Continue planning
+  if (
+  /plan the trip|plan my trip|plan trip|continue|next|go ahead|start planning|create itinerary|generate itinerary/i.test(lower)
+  ) {
+  return {
+    intent: 'request_itinerary',
+    confidence: 0.95,
+    extracted: entities,
+  };
+}
+
   // Stage-specific fallbacks
   switch (currentStage) {
     case 'greeting':
@@ -246,17 +257,37 @@ export function detectIntent(
     case 'narrow_destination':
       return { intent: 'narrow_destination', confidence: 0.75, extracted: entities };
 
-    case 'collecting_details':
-      if (entities.budget || /budget|spend|cost/i.test(lower)) {
-        return { intent: 'provide_budget', confidence: 0.72, extracted: entities };
-      }
-      if (entities.adults || entities.children || entities.travelerType) {
-        return { intent: 'provide_travelers', confidence: 0.72, extracted: entities };
-      }
-      if (entities.durationDays || DATE_PATTERNS.some(p => p.test(lower))) {
-        return { intent: 'provide_dates', confidence: 0.72, extracted: entities };
-      }
-      break;
+case 'collecting_details':
+
+  if (entities.budget) {
+    return {
+      intent: 'provide_budget',
+      confidence: 0.8,
+      extracted: entities,
+    };
+  }
+
+  if (entities.adults || entities.children) {
+    return {
+      intent: 'provide_travelers',
+      confidence: 0.8,
+      extracted: entities,
+    };
+  }
+
+  if (entities.durationDays) {
+    return {
+      intent: 'provide_dates',
+      confidence: 0.8,
+      extracted: entities,
+    };
+  }
+
+  return {
+    intent: 'request_itinerary',
+    confidence: 0.7,
+    extracted: entities,
+  };
 
     case 'refine_itinerary':
     case 'approve_itinerary':
@@ -266,12 +297,28 @@ export function detectIntent(
       return { intent: 'modify_itinerary', confidence: 0.65, extracted: { ...entities, itineraryChange: text } };
   }
 
-  // Final fallback — treat as destination discovery if in early stages
-  if (['greeting', 'discover', 'narrow_destination', 'plan'].includes(currentStage)) {
-    return { intent: 'discover_destination', confidence: 0.55, extracted: entities };
-  }
+// Final fallback
+if (currentStage === 'narrow_destination') {
+  return {
+    intent: 'narrow_destination',
+    confidence: 0.9,
+    extracted: entities,
+  };
+}
 
-  return { intent: 'ask_question', confidence: 0.5, extracted: entities };
+if (['greeting', 'discover', 'plan'].includes(currentStage)) {
+  return {
+    intent: 'discover_destination',
+    confidence: 0.55,
+    extracted: entities,
+  };
+}
+
+return {
+  intent: 'ask_question',
+  confidence: 0.5,
+  extracted: entities,
+};
 
 }
 const DESTINATIONS = [

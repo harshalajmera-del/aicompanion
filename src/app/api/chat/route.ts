@@ -250,9 +250,15 @@ function buildMockResponse(ctx: {
   }
 
   // Generic fallback
+  if (transitionResult.missingFields.length > 0) {
   return {
-    text: `I'm here to help you plan the perfect trip to ${dest}! Is there anything specific you'd like to adjust or explore further? 😊`,
+    text: transitionResult.missingFields[0].question,
   };
+}
+
+return {
+  text: "Let's continue planning your trip.",
+};
 }
 
 // ── Entity merger ──────────────────────────────────────────────────────────────
