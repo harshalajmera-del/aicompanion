@@ -280,6 +280,13 @@ function mergeExtracted(
   const updated = { ...trip };
   if (extracted.destination) updated.destination = extracted.destination as string;
   if (extracted.originCity) updated.originCity = extracted.originCity as string;
+  if (extracted.dates?.start) {
+  updated.startDate = extracted.dates.start;
+}
+
+if (extracted.dates?.end) {
+  updated.endDate = extracted.dates.end;
+}
   if (extracted.durationDays) updated.durationDays = extracted.durationDays as number;
   if (extracted.adults) updated.adults = extracted.adults as number;
   if (extracted.children != null) updated.children = extracted.children as number;

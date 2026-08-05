@@ -182,9 +182,19 @@ if (city) {
 
 }
 
-  // Extract entities regardless of intent
-  const duration = extractDuration(text);
-  if (duration) entities.durationDays = duration;
+// Extract travel dates
+const dates = extractDates(text);
+
+if (dates.start) {
+  entities.dates = dates;
+}
+
+// Extract duration
+const duration = extractDuration(text);
+
+if (duration) {
+  entities.durationDays = duration;
+}
 
   const budget = extractBudget(text);
   if (budget.amount) entities.budget = budget.amount;
@@ -366,4 +376,43 @@ function extractDestination(text: string): string | undefined {
     .split(" ")
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
+
+    function extractDates(text: string): { start?: string; end?: string } {
+
+  const months =
+    "january|february|march|april|may|june|july|august|september|october|november|december";
+
+  const regex = new RegExp(
+    `(\\d{1,2})\\s+(${months})\\s+(\\d{4})`,
+    "i"
+  );
+
+  const match = text.match(regex);
+
+  if (!match) {
+    return {};
+  }
+
+  const day = match[1].padStart(2, "0");
+  const monthName = match[2].toLowerCase();
+  const year = match[3];
+
+  const monthMap: Record<string, string> = {
+    january: "01",
+    february: "02",
+    march: "03",
+    april: "04",
+    may: "05",
+    june: "06",
+    july: "07",
+    august: "08",
+    september: "09",
+    october: "10",
+    november: "11",
+    december: "12",
+  };
+
+  return {
+    start: `${year}-${monthMap[monthName]}-${day}`,
+  };
 }
