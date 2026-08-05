@@ -147,7 +147,7 @@ export type Intent =
   | 'greet'
   | 'discover_destination'
   | 'narrow_destination'
-  |'provide_origin'      
+  | 'provide_origin'      
   | 'provide_duration'  
   | 'provide_dates'
   | 'provide_budget'

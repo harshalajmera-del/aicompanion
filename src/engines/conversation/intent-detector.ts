@@ -164,11 +164,23 @@ export function detectIntent(
   const entities: ExtractedEntities = {};
 
   // Extract destination
-  const destination = extractDestination(text);
+ const city = extractDestination(text);
 
-  if (destination) {
-    entities.destination = destination;
-  }
+if (city) {
+
+    // If we're already collecting trip details,
+    // the next city entered should be treated as origin.
+    if (currentStage === "collecting_details") {
+
+        entities.originCity = city;
+
+    } else {
+
+        entities.destination = city;
+
+    }
+
+}
 
   // Extract entities regardless of intent
   const duration = extractDuration(text);
