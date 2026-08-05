@@ -306,13 +306,6 @@ if (entities.originCity) {
   }
 
 // Final fallback
-if (currentStage === 'narrow_destination') {
-  return {
-    intent: 'narrow_destination',
-    confidence: 0.9,
-    extracted: entities,
-  };
-}
 
 if (['greeting', 'discover', 'plan'].includes(currentStage)) {
   return {
