@@ -259,13 +259,13 @@ export function detectIntent(
 
 case 'collecting_details': {
 
-  if (entities.originCity) {
+if (entities.originCity) {
     return {
-      intent: 'provide_dates',
-      confidence: 0.9,
-      extracted: entities,
+        intent: 'provide_origin',
+        confidence: 0.95,
+        extracted: entities,
     };
-  }
+}
 
   if (entities.durationDays) {
     return {
@@ -296,7 +296,6 @@ case 'collecting_details': {
     confidence: 0.8,
     extracted: entities,
   };
-}
 }
     case 'refine_itinerary':
     case 'approve_itinerary':
