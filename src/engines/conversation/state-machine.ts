@@ -111,10 +111,12 @@ export function transition(input: TransitionInput): TransitionResult {
       result.missingFields = getMissingFields(trip);
       break;
 
-    case 'provide_dates':
-    case 'provide_budget':
-    case 'provide_travelers':
-    case 'provide_interests': {
+   case 'provide_origin':
+   case 'provide_duration':
+   case 'provide_dates':
+   case 'provide_budget':
+   case 'provide_travelers':
+   case 'provide_interests':{
       const missing = getMissingFields(trip);
       if (missing.length === 0) {
         result.nextStage = 'generating_itinerary';
